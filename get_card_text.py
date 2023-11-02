@@ -1,3 +1,4 @@
+import re 
 # create card 
 '''
 'name'
@@ -15,13 +16,13 @@ create_card(name="Jack", profession="driver", hobby="go for walks",  difficultie
 def create_card(**kwargs):
     if not kwargs:
         return "Please provide more information about yourself to create a card."
-    name = f'I’m {kwargs["name"]}.' if 'name' in kwargs else ""
+    name = f'My name is {kwargs["name"]}.' if 'name' in kwargs else ""
     profession = f"I am/was a {kwargs['profession']}." if 'profession' in kwargs else ""
-    hobby = f'I like to {kwargs["hobby"]}.' if "hobby" in kwargs else ''
+    hobby = f'In my free time I like to {kwargs["hobby"]}.' if "hobby" in kwargs else ''
     situation = ''
     difficulties = ''
     if 'situation' in kwargs and 'difficulties' in kwargs:
-        situation = f'I {kwargs["situation"]} and it\'s hard for me to ' 
+        situation = f'I {kwargs["situation"]} and it\'s now hard for me to ' 
         difficulties = f'{kwargs["difficulties"]}.'
     elif 'situation' in kwargs:
         situation = f'I {kwargs["situation"]}.'
@@ -33,7 +34,7 @@ def create_card(**kwargs):
     s = f"""Hi!
 {name}{profession}{hobby} 
 {situation}{difficulties}
-{communication} 
-Thank you! {additional}"""
+{communication}
+Thank you! {additional}"""
 
-    return s
+    return re.sub(r'(?<=[.!?])(?=[^\s])', ' ', s)
