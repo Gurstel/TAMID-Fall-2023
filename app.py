@@ -23,6 +23,13 @@ class User(UserMixin, db.Model):
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
+    profession = StringField("profession", validators=[DataRequired()])
+    hobby = StringField("hobby", validators=[DataRequired()])
+    situation = StringField("situation", validators=[DataRequired()])
+    difficulties = StringField("difficulties", validators=[DataRequired()])
+    communication = StringField("communication", validators=[DataRequired()])
+    additional = StringField("additional", validators=[DataRequired()])
+
     submit = SubmitField("Login")
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -31,13 +38,21 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         name = form.username.data
+        profession = form.profession.data
+        hobby = form.hobby.data
+        situation = form.situation.data
+        difficulties = form.difficulties.data
+        communication = form.communication.data
+        additional = form.additional.data
+
     #     if user and user.password == form.password.data:
     #         login_user(user)
     #         return redirect(url_for('secret'))
 
     #     print("wrong")
     #     flash('Invalid username or password')
-        content = create_card(name = name)
+        content = create_card(name = name,profession = profession, hobby = hobby, situation=situation,difficulties=difficulties,
+        communication=communication,additional=additional)
         return render_template('secret.html', content=content)
 
     return render_template('login.html', form=form)
