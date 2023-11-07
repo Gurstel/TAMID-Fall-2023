@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    background-color: #D0E4B0; /* Pastel green for the background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center both horizontally and vertically */
+    height: 100vh;
+    margin: 0;
+  }
+  .centered {
+    text-align: center;
+  }
+  .green-text {
+    color: #6B8E23; /* Pastel green for text */
+  }
+  .darker-green-text {
+    color: #4B6922; /* Darker green for "Welcome to Home Page!" */
+  }
+  .login-link {
+    text-decoration: none;
+    color: #6B8E23; /* Pastel green for link text */
+    font-weight: bold;
+    font-size: 30px;
+    padding: 10px 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="centered">
+  <h1 class="darker-green-text">Welcome to Home Page!</h1>
+</div>
+
+<a href="{{ url_for('login') }}" class="login-link">Login</a>
+
+</body>
+</html>
