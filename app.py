@@ -1,82 +1,80 @@
-from flask import Flask, render_template, redirect, url_for, flash
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask import Flask, render_template, redirect, url_for, session, send_file
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired
-from flask_sqlalchemy import SQLAlchemy
+from wtforms import StringField, SelectField, SubmitField
+from flask_session import Session
 from create_card import create_card
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SESSION_TYPE'] = 'filesystem'  # Use filesystem-based sessions
 
-db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+Session(app)
 
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
+# Form for user information
 
-class LoginForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    profession = StringField("profession", validators=[DataRequired()])
-    hobby = StringField("hobby", validators=[DataRequired()])
-    situation = StringField("situation", validators=[DataRequired()])
-    difficulties = StringField("difficulties", validators=[DataRequired()])
-    communication = StringField("communication", validators=[DataRequired()])
-    additional = StringField("additional", validators=[DataRequired()])
 
-    submit = SubmitField("Login")
+class InfoForm(FlaskForm):
+    name = StringField("First Name")
+    profession = StringField("Profession")
+    hobby = StringField("Hobby")
+    situation = StringField("Situation")
+    difficulties = StringField("Difficulties")
+    communication = StringField("Communication")
+    additional = StringField("Additional")
+    submit = SubmitField("Next")
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    form = LoginForm()
+# Form for background style selection
+
+
+class BackgroundForm(FlaskForm):
+    background_style = SelectField(
+        "Background Style",
+        choices=[('style1', 'Style 1'), ('style2', 'Style 2'),
+                 ('style3', 'Style 3')]  # Add your styles here
+    )
+    submit = SubmitField("Create Card")
+
+
+@app.route('/form', methods=['GET', 'POST'])
+def form():
+    form = InfoForm()
     if form.validate_on_submit():
-        name = form.username.data
-        profession = form.profession.data
-        hobby = form.hobby.data
-        situation = form.situation.data
-        difficulties = form.difficulties.data
-        communication = form.communication.data
-        additional = form.additional.data
+        # Save the form data to the session
+        session['form_data'] = {name: field.data for name,
+                                field in form._fields.items() if field.data}
+        return redirect(url_for('background'))
 
-    #     if user and user.password == form.password.data:
-    #         login_user(user)
-    #         return redirect(url_for('secret'))
+    return render_template('form.html', form=form)
 
-    #     print("wrong")
-    #     flash('Invalid username or password')
-        content = create_card(name = name,profession = profession, hobby = hobby, situation=situation,difficulties=difficulties,
-        communication=communication,additional=additional)
-        return render_template('secret.html', content=content)
 
-    return render_template('login.html', form=form)
+@app.route('/background', methods=['GET', 'POST'])
+def background():
+    form = BackgroundForm()
+    if form.validate_on_submit():
+        # Retrieve the saved form data
+        form_data = session.get('form_data', {})
+        # Add the selected background style to the form data
+        form_data['background_style'] = form.background_style.data
+        # Save the complete form data back to the session
+        session['form_data'] = form_data
+        # Redirect to the image serving route
+        return redirect(url_for('create_card_route'))
+    return render_template('background_form.html', form=form)
+
+
+@app.route('/create_card')
+def create_card_route():
+    form_data = session.get('form_data', {})
+    if form_data:
+        image_io = create_card(**form_data)
+        return send_file(image_io, mimetype='image/png', as_attachment=False)
+    return 'No card information provided', 400
+
 
 @app.route('/')
 def home():
     return render_template('home.html')
 
-@app.route('/secret')
-@login_required
-def secret():
-    return render_template('secret.html')
-
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)

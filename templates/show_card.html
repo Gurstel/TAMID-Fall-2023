@@ -1,0 +1,30 @@
+<!-- show_card.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Card</title>
+    <style>
+        /* Set the background of the entire page to white */
+        body {
+            background-color: white;
+        }
+        img {
+            /* Set the maximum width of the image to 100% of its container */
+            max-width: 100%;
+            height: auto;
+            /* You can also add a border or shadow to the image if you like */
+            box-shadow: 0px 0px 10px #ccc; /* Example shadow */
+            border: 1px solid #ddd; /* Example border */
+            display: block; /* Centers the image if the width is less than container */
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Personalized Card</h1>
+    <!-- The image source is the create_card endpoint -->
+    <img src="{{ url_for('create_card_route') }}" alt="Personalized Card">
+</body>
+</html>
