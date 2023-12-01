@@ -1,21 +1,60 @@
-<form method="post">
-    {{ form.hidden_tag() }}
-    <label>{{ form.username.label }}</label>
-    {{ form.username() }}<br>
-    <label>{{ form.password.label }}</label>
-    {{ form.password() }}<br>
-    <label>{{ form.profession.label }}</label>
-    {{ form.profession() }}<br>
-    <label>{{ form.hobby.label }}</label>
-    {{ form.hobby() }}<br>
-    <label>{{ form.situation.label }}</label>
-    {{ form.situation() }}<br>
-    <label>{{ form.difficulties.label }}</label>
-    {{ form.difficulties() }}<br>
-    <label>{{ form.communication.label }}</label>
-    {{ form.communication() }}<br>
-    <label>{{ form.additional.label }}</label>
-    {{ form.additional() }}<br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Styling</title>
+    <style>
+        /* Your CSS styles here */
+    </style>
+</head>
+<body>
+    <form method="post">
+        {{ form.hidden_tag() }}
 
-    {{ form.submit() }}
-</form>
+        <div class="form-group">
+            <label>{{ form.username.label }}</label>
+            {{ form.username(size=32) }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.password.label }}</label>
+            {{ form.password(size=32) }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.profession.label }}</label>
+            {{ form.profession(size=32) }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.hobby.label }}</label>
+            {{ form.hobby(size=32) }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.situation.label }}</label>
+            {{ form.situation(size=32) }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.difficulties.label }}</label>
+            {{ form.difficulties(size=32) }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.communication.label }}</label>
+            {{ form.communication(size=32) }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.additional.label }}</label>
+            {{ form.additional(size=32) }}
+        </div>
+
+        <div class="form-group">
+            {{ form.submit() }}
+        </div>
+    </form>
+</body>
+</html>
